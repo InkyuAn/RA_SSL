@@ -1,0 +1,27 @@
+This project is published on ICRA 2018, "Reflection-aware sound source localization, An et al.".
+
+It works on ROS, Ubuntu.
+
+For running this project, you have to link it to SLAM and TDOA-based method.
+I used RTAB-map SLAM method and manyears TDOA-based method.
+
+Also, dependencies are like below
+" pcl_ros, pcl_conversions, std_srvs, octomap_ros, octomap_msgs, visualization_msgs, sensor_msgs".
+
+                    <The diagram of the project>
+         "rayBasedSSL_node.cpp"
+                   |
+           "rayBasedSSL.cpp"
+                   |___________________________
+                   |                           |
+          "particleFilter.cpp"      "soundPotentialField.cpp"
+                                               |
+                                    "acousticRaytracing.cpp"
+                                               |
+                                "SVD/singular_value_decomposition.cpp"
+
+
+If you have questions, feel free ask me a question.
+Contect me using e-mail, "inkyu.an@kaist.ac.kr" or "dksdlsrb89@gmail.com".
+
+Thanks, 

@@ -1,0 +1,8 @@
+<launch>	
+	<node pkg="tf" type="static_transform_publisher" name="link_SoundSource" args="0.0 2.70 0.0 3.141592 0 0 map odom_sound 100" />
+
+	<node pkg="reflection_aware_ssl" type="reflection_aware_ssl_node" name="reflection_aware_ssl_node" output="screen">
+
+	</node>
+
+</launch>
