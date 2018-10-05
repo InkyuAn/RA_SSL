@@ -9,6 +9,7 @@ This project is published on ICRA 2018, "Reflection-aware sound source localizat
 It contains a map(octomap) and an audio stream data.
 You can run our project without any other additional project.
 The saved audio stream is used in the "TDOA-based SSL" to generate the sound direction information.
+"TDOA-based SSL" is based on ManyEars open software.
 The saved Octomap and the sound direction information generted by the TDOA-based method are used in our "Reflection-aware SSL".
 
 After building our project using "> catkin_make", you can run our "Reflection-aware SSL" using "> roslaunch reflection_aware_ssl rayBased_soundLocalization.launch" and see the result using Rviz('ra_ssl_core.rviz' file is the configuration).
