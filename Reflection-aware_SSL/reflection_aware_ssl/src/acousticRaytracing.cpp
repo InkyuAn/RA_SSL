@@ -43,14 +43,10 @@ namespace soundRaytracing {
             for(int j=0 ; j<numOfCube ; j++){
                 for(int k=0 ; k<numOfCube ; k++){
 
-
                     octomap::OcTreeKey tempKey(keyValue[0] - middleOfCube + i, keyValue[1] - middleOfCube + j, keyValue[2] - middleOfCube + k);
-
                     octomap::OcTreeNode* tempNode = octree->search(tempKey, maxTreeDepth);
-
-                    if(tempNode != NULL){   // tempNode is not NULL
-                        if(octree->isNodeOccupied(tempNode)){
-                            //std::cout << "  Occupied cell: " << i << " " << j << " " << k << std::endl;
+                    if(tempNode != NULL){
+                        if(octree->isNodeOccupied(tempNode)){                            
                             middleOfOccupiedCell[0] += (double)i;
                             middleOfOccupiedCell[1] += (double)j;
                             middleOfOccupiedCell[2] += (double)k;
@@ -60,8 +56,7 @@ namespace soundRaytracing {
                             numOfOccupiedCell++;
                         }
 
-                    }else{  // tempNode is NULL
-                        //std::cout << "Node's NULL" << std::endl;
+                    }else{
                     }
 
                 }

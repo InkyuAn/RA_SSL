@@ -1,9 +1,0 @@
-<launch>
-	<group ns="kobuki_sound_source">		
-
-		<include file="$(find kobuki_node)/launch/minimal_v1.launch">
-		</include>		
-		<include file="$(find kobuki_keyop)/launch/keyop.launch">
-		</include>		
-	</group>
-</launch>

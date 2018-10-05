@@ -10,7 +10,6 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <octomap_server/OctomapServerConfig.h>
 
-
 #include <tf/transform_listener.h>
 #include <tf/message_filter.h>
 #include <message_filters/subscriber.h>
@@ -22,15 +21,15 @@
 #include <octomap_ros/conversions.h>
 #include <octomap/octomap.h>
 
-// Potential source
-#include "tdoa_based_ssl_message/PotentialSources.h"
-#include "tdoa_based_ssl_message/PotentialSourcesAverage.h"
-#include "tdoa_based_ssl_message/SourceInfoT.h"
+/// Potential source
+#include "tdoa_ra_ssl_message/PotentialSources.h"
+#include "tdoa_ra_ssl_message/PotentialSourcesAverage.h"
+#include "tdoa_ra_ssl_message/SourceInfoT.h"
+#include "tdoa_ra_ssl_message/sourceGroundTruth.h"
 
 #include "reflection_aware_ssl_message/visualizeConvergenceParticle.h"
 
 #include <soundPotentialField.h>
-
 
 #include <sys/time.h>
 #include <queue>
@@ -47,7 +46,7 @@ namespace raybased_soundlocalization{
     /// Data type of Potentail source, which denotes the direciton of sound
     class PotentialSource{
     public:
-        PotentialSource(tdoa_based_ssl_message::SourceInfoT node_, float freq_){
+        PotentialSource(tdoa_ra_ssl_message::SourceInfoT node_, float freq_){
             frequency = freq_;
             potentialSourceNode.source_id = node_.source_id;
             potentialSourceNode.source_pos.x = node_.source_pos.x;
@@ -94,7 +93,7 @@ namespace raybased_soundlocalization{
 
         }
 
-        tdoa_based_ssl_message::SourceInfoT potentialSourceNode;
+        tdoa_ra_ssl_message::SourceInfoT potentialSourceNode;
         float frequency;
     };
 
@@ -117,12 +116,13 @@ namespace raybased_soundlocalization{
 
         virtual ~RaybasedSoundlocalization();
 
-        virtual void insertOctomapfullCallback(const octomap_msgs::Octomap::ConstPtr& cloud);
+        virtual void insertSourcePositionCallback(const tdoa_ra_ssl_message::sourceGroundTruthConstPtr& sourcePosPtr);
 
         virtual void publishColorMarker(const ros::Time& rostime = ros::Time::now());
 
-        virtual void insertPotentialsourcesCallback(const tdoa_based_ssl_message::PotentialSourcesConstPtr& potentialSources_ptr);
+        virtual void publishCylinders(octomap::point3d inputGroundTruth, octomap::point3d inputRobotPos);
 
+        virtual void insertPotentialsourcesCallback(const tdoa_ra_ssl_message::PotentialSourcesConstPtr& potentialSources_ptr);
 
         virtual void extractPotentialSourceCallback(const ros::TimerEvent&);
 
@@ -130,39 +130,39 @@ namespace raybased_soundlocalization{
 
 
     protected:
+        /// Project path
+        /// You have to modify this for your working environment.
+        std::string projectPath;
+
+        ///
         ros::NodeHandle m_nh;
+
+        /// Publishers
         ros::Publisher m_markerPub;                
-        ros::Publisher m_rayMarkerPub;
-        ros::Publisher ps_gaussianParticlePub[4];
+        ros::Publisher m_rayMarkerPub;        
 
         ros::Publisher ps_particlePub;
+        ros::Publisher robotPosPublisher;
+        ros::Publisher groundTruthPosPublisher;
+        ros::Publisher ps_visualParticleToModule;
+
+        bool m_latchedTopics;
+
+        /// Timers
         ros::Timer particleFilter_timer;
         ros::Timer extractPS_timer;
         ros::Timer controller_timer;
 
-        ros::Publisher ps_visualParticleToModule;
+        /// Subscribers
+        ros::Subscriber ps_potentialSourcesSub;
+        ros::Subscriber ps_sourcePositionSubscriber;
 
 
-        message_filters::Subscriber<octomap_msgs::Octomap>* m_octomapfullSub;
-        tf::MessageFilter<octomap_msgs::Octomap>* m_tfOctomapfullSub;
-        tf::TransformListener m_tfListener;
-        tf::TransformListener m_tfOdomListener;
-
-        bool m_latchedTopics;
-
+        /// Octo map
         OcTreeT* m_octree;
 
-
-        octomap::OcTreeKey m_updateBBXMin;
-        octomap::OcTreeKey m_updateBBXMax;
-
         std::string m_worldFrameId; // the map frame
-        std::string m_odomFrameId; // the map frame
-        std::string m_soundOdomFrameId; // the map frame
-        std::string m_baseFrameId; // base of the robot for ground plane filtering
-        std::string m_groundTruthFrameId; // ground truth position
 
-        tf::StampedTransform ps_baseFootprintToWorldTf;
         octomap::point3d ps_soundCubeToBaseFootprint;
 
         double m_res;
@@ -171,58 +171,39 @@ namespace raybased_soundlocalization{
         bool m_useColoredMap;
 
         std_msgs::ColorRGBA m_color;
-        std_msgs::ColorRGBA m_colorFree;
+        std_msgs::ColorRGBA m_colorFree;        
 
-        std::string m_octomapFilename;
-        std::string ps_potentialSourcesFilename;
-
-        // Potential Source
-        //ros::Timer ps_timer;
-        ros::Subscriber ps_potentialSourcesSub;        
-
-        std::string ps_SoundCubeFrameId;                
-        bool ps_drawFullPotentialRay;
         bool ps_drawSoundPotentialField;
 
         double ps_minLatitude;
         double ps_maxLatitude;
         float ps_minEnergy;
 
-        std::vector<tdoa_based_ssl_message::PotentialSourcesAverage> ps_potentialSourcesQueue;
+        std::vector<tdoa_ra_ssl_message::PotentialSourcesAverage> ps_potentialSourcesQueue;
 
-        int ps_queueNumber[2]; // index of ps_potentialSourcesQueue
+        /// source position (ground truth)
+        float groundTruthPosition[3];
 
         int ps_numberOfQueue[4];
         unsigned ps_queueIndex;
-        unsigned ps_windowSize;
-        double ps_ceilingHeight;    // Ceiling height ( meter )
+        double ps_ceilingHeight;    /// Ceilling height ( meter )
 
+        /// These variables are used for the propagation energy of rays.
         double ps_temperature;
         double ps_humidity;
-
         soundAttenuation atmosphericAbsorption;
 
-        // Sound Potential Field
+        /// Sound Potential Field, which contains the voxel based acoustic rays.
         SoundPotentialField ps_soundPotentialField;
 
-        bool ps_checkGettingPotentialSources;
-
-        double ps_filterWindowSize;
-
-        ParticleFilter* ps_particleFilter;
-
+        /// For Particle filter
+        ParticleFilter* ps_particleFilter;       
         int ps_numberOfParticle;
 
-        struct timeval check_point;
 
-        int ps_InsertPSCounter;
-
-        octomap::point3d ps_groundTruth;
-
-
+        /// For visualizing estimated positions of the source
         reflection_aware_ssl_message::visualizeConvergenceParticle positionToVisualDetector;        
 
-        ros::Time ps_audio_get_time;
 
     };
 }

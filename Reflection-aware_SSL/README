@@ -1,24 +1,17 @@
 This project is published on ICRA 2018, "Reflection-aware sound source localization, An et al.".
 
-It works on ROS, Ubuntu.
+<environment>
+- Ubuntu 14.04.
+- ROS, indigo version (I am not guarantee for higher versions, but I assume that our project works well).
+- Dependencies: octomap, pcl_ros
 
-For running this project, you have to link it to SLAM and TDOA-based method.
-I used RTAB-map SLAM method and manyears TDOA-based method.
+<Projects>
+It contains a map(octomap) and an audio stream data.
+You can run our project without any other additional project.
+The saved audio stream is used in the "TDOA-based SSL" to generate the sound direction information.
+The saved Octomap and the sound direction information generted by the TDOA-based method are used in our "Reflection-aware SSL".
 
-Also, dependencies are like below
-" pcl_ros, pcl_conversions, std_srvs, octomap_ros, octomap_msgs, visualization_msgs, sensor_msgs".
-
-                    <The diagram of the project>
-         "rayBasedSSL_node.cpp"
-                   |
-           "rayBasedSSL.cpp"
-                   |___________________________
-                   |                           |
-          "particleFilter.cpp"      "soundPotentialField.cpp"
-                                               |
-                                    "acousticRaytracing.cpp"
-                                               |
-                                "SVD/singular_value_decomposition.cpp"
+After building our project using "> catkin_make", you can run our "Reflection-aware SSL" using "> roslaunch reflection_aware_ssl rayBased_soundLocalization.launch" and see the result using Rviz('ra_ssl_core.rviz' file is the configuration).
 
 
 If you have questions, feel free ask me a question.

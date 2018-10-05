@@ -1,6 +1,10 @@
 
 #include "SVD/singular_value_decomposition.h"
 
+void testPrint()
+{
+	std::cout << "testPrint" << std::endl;
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////

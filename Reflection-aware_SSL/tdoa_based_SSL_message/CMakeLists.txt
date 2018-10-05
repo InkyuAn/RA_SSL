@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(tdoa_based_ssl_message)
+project(tdoa_ra_ssl_message)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -50,6 +50,8 @@ add_message_files(
   SourceInfo.msg
   SourceInfoT.msg
   PotentialSourcesAverage.msg
+  SceneState.msg
+  sourceGroundTruth.msg
 )
 
 ## Generate services in the 'srv' folder

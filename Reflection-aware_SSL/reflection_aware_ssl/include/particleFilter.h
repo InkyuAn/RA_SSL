@@ -19,10 +19,7 @@ namespace raybased_soundlocalization{
             position = p;
             weight = 0;
             numOfPreweit = 10;
-            prevweight.resize(numOfPreweit, 0.0f);
-            //prevweight[0] = 0;
-            //prevweight[1] = 0;
-            //prevweight[2] = 0;
+            prevweight.resize(numOfPreweit, 0.0f);        
             index = i;
         }
         particle(float x, float y, float z, int i){
@@ -30,10 +27,7 @@ namespace raybased_soundlocalization{
             position.y() = y;
             position.z() = z;
             numOfPreweit = 7;
-            prevweight.resize(numOfPreweit, 0.0f);
-            //prevweight[0] = 0;
-            //prevweight[1] = 0;
-            //prevweight[2] = 0;
+            prevweight.resize(numOfPreweit, 0.0f);           
             weight = 0;
             index = i;
         }
@@ -42,32 +36,19 @@ namespace raybased_soundlocalization{
             for (int i=0 ; i<numOfPreweit ; i++){
                 prevweight[i] = 0.0f;
             }
-            //prevweight[0] = 0;
-            //prevweight[1] = 0;
-            //prevweight[2] = 0;
         }
-        void reduceWeight() {
-            //weight = weight * 0.5;
-            //weight = weight * 0.5;
+        void reduceWeight() {           
             float sumOfPreWeight = 0.0f;
 
             for(int i=numOfPreweit-1 ; i>0 ; i--){
                 prevweight[i] = prevweight[i-1]*0.3;
-                //prevweight[i] = prevweight[i-1]*0.5;
                 sumOfPreWeight += prevweight[i];
             }
             if(numOfPreweit != 0)
-                prevweight[0] = weight * 0.3;
-                //prevweight[0] = weight * 0.5;
+                prevweight[0] = weight * 0.3;                
             sumOfPreWeight += prevweight[0];
-            //prevweight[0] = weight*0.5;
-            //prevweight[1] = prevweight[0]*0.5;
-            //prevweight[2] = prevweight[1]*0.5;
 
-
-            //weight = prevweight[0] + prevweight[1] + prevweight[2];
             weight = sumOfPreWeight;
-            //weight = weight * 0.1;
         }
 
         void addWeight(float w) {
@@ -77,7 +58,6 @@ namespace raybased_soundlocalization{
 
         octomap::point3d position;
         float weight;
-        //float prevweight[3];
         std::vector<float> prevweight;
         int numOfPreweit;
         int index;
@@ -101,10 +81,8 @@ namespace raybased_soundlocalization{
         void resetParticles();
         void reInitParticleFilter(octomap::point3d MaxMap_, octomap::point3d MinMap_);
         void resetWeightOfParticles();
-        //float computeWeightOfPaticle(float distance, float energy);
         float computeWeightOfPaticle(float distance, float distanceOfRayToIntersectedPoint, float energy, float initEnergy);
 
-        //float computeDistancePointToLines(octomap::point3d point, soundRaytracing::KeyRayEnergy& line, float &rayDistance, octomap::point3d& intersectedPoint);
         float computeDistancePointToLines(octomap::point3d point, soundRaytracing::KeyRayEnergy& line, float &rayDistance, octomap::point3d& intersectedPoint, int j);
 
         bool computeDistancePointToLine(octomap::point3d point, octomap::point3d origin, octomap::point3d end, float& distance,octomap::point3d& intersectedPoint);
@@ -126,9 +104,6 @@ namespace raybased_soundlocalization{
         float getUniformRandomValue(float min, float max);
         float getGaussianRandomValue(float mean, float var);
         float getGaussianDistribution(float dist);
-
-
-        // bool compareParticleWeight(particle first, particle second);
 
         /* variable */
         float PI;
@@ -152,11 +127,7 @@ namespace raybased_soundlocalization{
         bool isAcousticRay;
 
         octomap::ColorOcTree* Octree;
-
     };
-
-
-
 }
 
 
