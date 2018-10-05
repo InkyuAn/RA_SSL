@@ -1,0 +1,7 @@
+<launch>
+	<arg name="save_audio_file"	default="/home/inkyu/Documents/TDOA-based_SSL/"/>
+	<include file="$(find localization)/launch/rt_audio.launch" />
+	<include file="$(find localization)/launch/sound_localization_live.launch">
+		<arg name="save_audio_file"                    value="$(arg save_audio_file)" />
+	</include>
+</launch>

@@ -1,0 +1,8 @@
+<launch>
+	<arg name="save_audio_file"	default=""/>
+	<node pkg="localization" type="localization_node" name="SL_live" output="screen"> <!--launch-prefix="xterm -e gdb -\-args" -->
+		<param name="use_audio_stream" value="true"/>
+		<param name="enable_separation" value="true" />
+		<param name="save_audio_file" type="string" value="$(arg save_audio_file)"/>
+	</node>	
+</launch>

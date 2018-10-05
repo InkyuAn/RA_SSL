@@ -1,0 +1,18 @@
+<launch>
+	<arg name="system_delay" default="1"/>
+	<arg name="scene_state"	default="0"/>
+	<arg name="save_result"	default="false"/>
+	<!-- <arg name="raw_file"	default="/home/inkyu/Documents/TDOA-based_SSL/raw_data_IR_5_times/2018-06-25-22_55_26/origin_audio_stream"/> -->
+
+	<node pkg="localization" type="localization_node" name="SL_live" output="screen">
+		<param name="use_audio_stream" value="false"/>
+		<!-- <param name="raw_file" value="/home/inkyu/Documents/TDOA-based_SSL/raw_data_IR_5_times/2018-06-25-22_55_26/origin_audio_stream"/> -->
+		<!-- <param name="raw_file" value="/home/inkyu/Documents/TDOA-based_SSL/raw_data_clapping_voice/2018-06-25-23_37_24/origin_audio_stream"/> -->
+		<!-- <param name="raw_file" value="/home/inkyu/Documents/TDOA-based_SSL/raw_data_clapping_voice/2018-06-25-23_38_26/origin_audio_stream"/> -->
+		<!-- <param name="raw_file" type="string" value="$(arg raw_file)"/> -->
+		<param name="system_delay" type="int" value="$(arg system_delay)"/>
+		<param name="scene_state" type="int" value="$(arg scene_state)"/>
+		<param name="save_result" type="bool" value="$(arg save_result)"/>
+		<param name="enable_separation" value="true" />
+	</node>	
+</launch>
